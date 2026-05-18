@@ -291,8 +291,8 @@ export default function AboutPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
-  const firstName = 'Your';
-  const lastName = 'Name';
+  const firstName = 'Lawal';
+  const lastName = 'Job';
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">

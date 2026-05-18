@@ -1,14 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { 
-  Code2, 
-  Database, 
-  Palette, 
-  Cloud,
-  Smartphone,
-  Cog
-} from 'lucide-react'
+import { motion, type Variant } from 'framer-motion';
+import { Code2, Database, Palette, Cloud, Smartphone, Cog } from 'lucide-react';
 
 const techStacks = [
   {
@@ -53,7 +46,7 @@ const techStacks = [
     color: 'from-gray-500/20 to-slate-500/20',
     borderColor: 'hover:border-gray-500/50',
   },
-]
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -63,7 +56,7 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.8, y: 20 },
@@ -73,10 +66,10 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
-}
+};
 
 export default function TechStackSection() {
   return (
@@ -109,8 +102,8 @@ export default function TechStackSection() {
             Skills & <span className="gradient-text">Technologies</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-pretty">
-            I work with a diverse set of modern technologies to bring ideas to life. 
-            Here are the tools and frameworks I use daily.
+            I work with a diverse set of modern technologies to bring ideas to life. Here are the
+            tools and frameworks I use daily.
           </p>
         </motion.div>
 
@@ -130,8 +123,10 @@ export default function TechStackSection() {
               className={`group relative p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm transition-all duration-300 ${stack.borderColor}`}
             >
               {/* Gradient Background */}
-              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stack.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-              
+              <div
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stack.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+              />
+
               <div className="relative z-10">
                 {/* Icon and Title */}
                 <div className="flex items-center gap-4 mb-4">
@@ -166,5 +161,5 @@ export default function TechStackSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

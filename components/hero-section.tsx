@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowDown, Github, Linkedin, Twitter, Send, MessageCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import dynamic from 'next/dynamic'
-import Link from 'next/link'
-import { useRef } from 'react'
+import { ArrowDown, Github, Linkedin, Twitter, Send, MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
 
 const Scene3D = dynamic(() => import('@/components/scene-3d'), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background via-secondary/20 to-background" />
   ),
-})
+});
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -23,7 +23,7 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -32,10 +32,10 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
-}
+};
 
 const letterVariants = {
   hidden: { opacity: 0, y: 50, rotateX: -90 },
@@ -46,48 +46,73 @@ const letterVariants = {
     transition: {
       duration: 0.6,
       delay: i * 0.05,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   }),
-}
+};
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com', label: 'GitHub', color: 'hover:text-white hover:bg-[#333]' },
-  { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn', color: 'hover:text-white hover:bg-[#0077B5]' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter', color: 'hover:text-white hover:bg-[#1DA1F2]' },
-  { icon: Send, href: 'https://t.me/', label: 'Telegram', color: 'hover:text-white hover:bg-[#0088cc]' },
-  { icon: MessageCircle, href: 'https://wa.me/', label: 'WhatsApp', color: 'hover:text-white hover:bg-[#25D366]' },
-]
+  {
+    icon: Github,
+    href: 'https://github.com',
+    label: 'GitHub',
+    color: 'hover:text-white hover:bg-[#333]',
+  },
+  {
+    icon: Linkedin,
+    href: 'https://linkedin.com',
+    label: 'LinkedIn',
+    color: 'hover:text-white hover:bg-[#0077B5]',
+  },
+  {
+    icon: Twitter,
+    href: 'https://twitter.com',
+    label: 'Twitter',
+    color: 'hover:text-white hover:bg-[#1DA1F2]',
+  },
+  {
+    icon: Send,
+    href: 'https://t.me/',
+    label: 'Telegram',
+    color: 'hover:text-white hover:bg-[#0088cc]',
+  },
+  {
+    icon: MessageCircle,
+    href: 'https://wa.me/',
+    label: 'WhatsApp',
+    color: 'hover:text-white hover:bg-[#25D366]',
+  },
+];
 
 // Your name - update this
-const firstName = "Your"
-const lastName = "Name"
-const tagline = "Full Stack Developer & Creative Technologist"
+const firstName = 'Lawal';
+const lastName = 'Job';
+const tagline = 'Software Engineer';
 
 export default function HeroSection() {
-  const containerRef = useRef<HTMLElement>(null)
+  const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
-  })
+  });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9])
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      id="home" 
+      id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       <Scene3D />
-      
+
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-background pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30 pointer-events-none" />
-      
-      <motion.div 
+
+      <motion.div
         style={{ y, opacity, scale }}
         className="container mx-auto px-6 pt-20 relative z-10"
       >
@@ -99,7 +124,7 @@ export default function HeroSection() {
         >
           {/* Animated Badge */}
           <motion.div variants={itemVariants} className="mb-8">
-            <motion.span 
+            <motion.span
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/10 text-sm text-primary backdrop-blur-sm"
               whileHover={{ scale: 1.05, borderColor: 'rgba(20, 184, 166, 0.6)' }}
               animate={{
@@ -120,7 +145,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* Greeting */}
-          <motion.p 
+          <motion.p
             variants={itemVariants}
             className="text-lg sm:text-xl text-muted-foreground mb-4"
           >
@@ -145,10 +170,10 @@ export default function HeroSection() {
                     initial="hidden"
                     animate="visible"
                     className="inline-block"
-                    whileHover={{ 
-                      scale: 1.2, 
+                    whileHover={{
+                      scale: 1.2,
                       color: 'rgb(20, 184, 166)',
-                      transition: { duration: 0.2 } 
+                      transition: { duration: 0.2 },
                     }}
                   >
                     {letter}
@@ -163,9 +188,9 @@ export default function HeroSection() {
                     initial="hidden"
                     animate="visible"
                     className="inline-block gradient-text"
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.2,
-                      transition: { duration: 0.2 } 
+                      transition: { duration: 0.2 },
                     }}
                   >
                     {letter}
@@ -176,11 +201,8 @@ export default function HeroSection() {
           </motion.div>
 
           {/* Animated Tagline with typing effect */}
-          <motion.div 
-            variants={itemVariants}
-            className="mb-8 h-8 flex items-center justify-center"
-          >
-            <motion.p 
+          <motion.div variants={itemVariants} className="mb-8 h-8 flex items-center justify-center">
+            <motion.p
               className="text-xl sm:text-2xl text-primary font-medium"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -209,12 +231,12 @@ export default function HeroSection() {
             variants={itemVariants}
             className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 text-pretty leading-relaxed"
           >
-            I build exceptional digital experiences that live at the intersection of 
-            design and technology. Specializing in blockchain, AI, and modern web applications.
+            I build exceptional digital experiences that live at the intersection of design and
+            technology. Specializing in blockchain, AI, and Ethical Hacking
           </motion.p>
 
           {/* Stats Row */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="flex flex-wrap items-center justify-center gap-8 mb-10"
           >
@@ -231,14 +253,14 @@ export default function HeroSection() {
                 transition={{ delay: 1.5 + i * 0.1 }}
                 whileHover={{ scale: 1.1 }}
               >
-                <motion.span 
+                <motion.span
                   className="block text-3xl sm:text-4xl font-bold gradient-text"
-                  animate={{ 
+                  animate={{
                     textShadow: [
                       '0 0 20px rgba(20, 184, 166, 0.3)',
                       '0 0 40px rgba(20, 184, 166, 0.5)',
                       '0 0 20px rgba(20, 184, 166, 0.3)',
-                    ]
+                    ],
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
@@ -254,10 +276,7 @@ export default function HeroSection() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
           >
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/projects">
                 <Button size="lg" className="px-8 group relative overflow-hidden">
                   <motion.span
@@ -276,10 +295,7 @@ export default function HeroSection() {
                 </Button>
               </Link>
             </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/contact">
                 <Button variant="outline" size="lg" className="px-8 relative overflow-hidden group">
                   <span className="relative z-10">Get In Touch</span>
@@ -295,10 +311,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* Social Links */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center justify-center gap-3"
-          >
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-3">
             {socialLinks.map((social, i) => (
               <motion.a
                 key={social.label}
@@ -331,7 +344,7 @@ export default function HeroSection() {
           href="#projects"
           className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
         >
-          <motion.span 
+          <motion.span
             className="text-sm"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -351,15 +364,22 @@ export default function HeroSection() {
       {/* Floating Elements */}
       <motion.div
         className="absolute top-1/4 left-10 w-20 h-20 border border-primary/20 rounded-lg"
-        animate={{ 
+        animate={{
           rotate: 360,
-          borderColor: ['rgba(20, 184, 166, 0.2)', 'rgba(20, 184, 166, 0.5)', 'rgba(20, 184, 166, 0.2)']
+          borderColor: [
+            'rgba(20, 184, 166, 0.2)',
+            'rgba(20, 184, 166, 0.5)',
+            'rgba(20, 184, 166, 0.2)',
+          ],
         }}
-        transition={{ rotate: { duration: 20, repeat: Infinity, ease: 'linear' }, borderColor: { duration: 3, repeat: Infinity } }}
+        transition={{
+          rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
+          borderColor: { duration: 3, repeat: Infinity },
+        }}
       />
       <motion.div
         className="absolute top-1/3 right-16 w-16 h-16 border border-cyan-500/20 rounded-full"
-        animate={{ 
+        animate={{
           scale: [1, 1.2, 1],
           rotate: -360,
         }}
@@ -367,7 +387,7 @@ export default function HeroSection() {
       />
       <motion.div
         className="absolute bottom-1/4 left-20 w-12 h-12 bg-primary/5 rounded-full"
-        animate={{ 
+        animate={{
           y: [0, -30, 0],
           x: [0, 15, 0],
         }}
@@ -375,12 +395,12 @@ export default function HeroSection() {
       />
       <motion.div
         className="absolute bottom-1/3 right-24 w-24 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent"
-        animate={{ 
+        animate={{
           scaleX: [0, 1, 0],
           opacity: [0, 1, 0],
         }}
         transition={{ duration: 4, repeat: Infinity }}
       />
     </section>
-  )
+  );
 }
