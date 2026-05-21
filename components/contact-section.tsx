@@ -1,32 +1,32 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Mail, MapPin, Phone, Send, ArrowUpRight } from 'lucide-react'
-import Link from 'next/link'
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Mail, MapPin, Phone, Send, ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 
 const contactInfo = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'hello@example.com',
-    href: 'mailto:hello@example.com',
+    value: 'hello@joblawal33@gmail.com',
+    href: 'mailto:hello@joblawal33@gmail.com',
   },
   {
     icon: Phone,
     label: 'Phone',
-    value: '+1 (555) 123-4567',
-    href: 'tel:+15551234567',
+    value: '+234 90-7876-9622',
+    href: 'tel:+2349078769622',
   },
   {
     icon: MapPin,
     label: 'Location',
-    value: 'San Francisco, CA',
+    value: 'Abuja , Nigeria',
     href: '#',
   },
-]
+];
 
 export default function ContactSection() {
   return (
@@ -56,12 +56,11 @@ export default function ContactSection() {
             Get In Touch
           </motion.span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-balance">
-            Let&apos;s Create Something{' '}
-            <span className="gradient-text">Amazing</span>
+            Let&apos;s Create Something <span className="gradient-text">Amazing</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Have a project in mind? I&apos;d love to hear about it. Send me a message 
-            and let&apos;s bring your ideas to life together.
+            Have a project in mind? I&apos;d love to hear about it. Send me a message and let&apos;s
+            bring your ideas to life together.
           </p>
         </motion.div>
 
@@ -76,32 +75,32 @@ export default function ContactSection() {
           >
             <form className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
-                <motion.div
-                  whileFocus={{ scale: 1.02 }}
-                  className="space-y-2"
-                >
-                  <label htmlFor="name" className="text-sm font-medium">Name</label>
+                <motion.div whileFocus={{ scale: 1.02 }} className="space-y-2">
+                  <label htmlFor="name" className="text-sm font-medium">
+                    Name
+                  </label>
                   <Input
                     id="name"
-                    placeholder="John Doe"
+                    placeholder="your name"
                     className="bg-secondary/30 border-border/50 focus:border-primary/50"
                   />
                 </motion.div>
-                <motion.div
-                  whileFocus={{ scale: 1.02 }}
-                  className="space-y-2"
-                >
-                  <label htmlFor="email" className="text-sm font-medium">Email</label>
+                <motion.div whileFocus={{ scale: 1.02 }} className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Email
+                  </label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="name@example.com"
                     className="bg-secondary/30 border-border/50 focus:border-primary/50"
                   />
                 </motion.div>
               </div>
               <div className="space-y-2">
-                <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+                <label htmlFor="subject" className="text-sm font-medium">
+                  Subject
+                </label>
                 <Input
                   id="subject"
                   placeholder="Project inquiry"
@@ -109,7 +108,9 @@ export default function ContactSection() {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium">Message</label>
+                <label htmlFor="message" className="text-sm font-medium">
+                  Message
+                </label>
                 <Textarea
                   id="message"
                   placeholder="Tell me about your project..."
@@ -169,7 +170,8 @@ export default function ContactSection() {
             >
               <h3 className="text-xl font-semibold mb-2">Ready to start a project?</h3>
               <p className="text-muted-foreground text-sm mb-4">
-                Let&apos;s schedule a call to discuss your needs and how I can help bring your vision to reality.
+                Let&apos;s schedule a call to discuss your needs and how I can help bring your
+                vision to reality.
               </p>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button asChild variant="secondary" className="w-full">
@@ -184,5 +186,5 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

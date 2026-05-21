@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Github, Linkedin, Twitter, Heart } from 'lucide-react'
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Github, Linkedin, Twitter, Heart } from 'lucide-react';
 
 const footerLinks = {
   navigation: [
@@ -12,18 +12,18 @@ const footerLinks = {
     { label: 'Contact', href: '/contact' },
   ],
   social: [
-    { icon: Github, href: 'https://github.com', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+    { icon: Github, href: 'https://github.com/MadMax-source', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/jobinsonmaxchain', label: 'LinkedIn' },
+    { icon: Twitter, href: 'https://x.com/job135458229139', label: 'Twitter' },
   ],
-}
+};
 
 export default function Footer() {
   return (
     <footer className="py-12 border-t border-border/50 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-t from-secondary/20 to-transparent" />
-      
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo & Copyright */}
@@ -37,7 +37,7 @@ export default function Footer() {
               <span className="gradient-text">Portfolio</span>
             </Link>
             <p className="text-sm text-muted-foreground flex items-center justify-center md:justify-start gap-1">
-              Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by John Doe
+              Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by Job
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               © {new Date().getFullYear()} All rights reserved.
@@ -89,5 +89,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
