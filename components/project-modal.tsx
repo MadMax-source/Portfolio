@@ -1,14 +1,27 @@
-'use client'
+'use client';
 
-import { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, ExternalLink, Github, Clock, User, CheckCircle2, AlertTriangle, MessageSquarePlus, Upload, Star } from 'lucide-react'
-import { Project } from '@/types/project'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  X,
+  ExternalLink,
+  Github,
+  Clock,
+  User,
+  CheckCircle2,
+  AlertTriangle,
+  MessageSquarePlus,
+  Upload,
+  Star,
+} from 'lucide-react';
+//import { Project } from '@/types/project'
+import { Button } from '@/components/ui/button';
+import { Project } from '@/context/project-context';
+import { useReviews } from '@/context/review-context';
 
 interface ProjectModalProps {
-  project: Project | null
-  onClose: () => void
+  project: Project | null;
+  onClose: () => void;
 }
 
 const categoryGradients: Record<string, string> = {
@@ -17,70 +30,94 @@ const categoryGradients: Record<string, string> = {
   'ethical-hacking': 'from-green-500 to-emerald-500',
   ai: 'from-cyan-500 to-blue-500',
   web2: 'from-pink-500 to-rose-500',
-}
+};
 
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
-  const [showReviewForm, setShowReviewForm] = useState(false)
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const { addReview } = useReviews(); // ✅ ADD THIS
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [reviewData, setReviewData] = useState({
     name: '',
     position: '',
     review: '',
     rating: 5,
-  })
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (showReviewForm) {
-          setShowReviewForm(false)
+          setShowReviewForm(false);
         } else {
-          onClose()
+          onClose();
         }
       }
-    }
-    
+    };
+
     if (project) {
-      document.body.style.overflow = 'hidden'
-      window.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleEscape);
     }
-    
+
     return () => {
-      document.body.style.overflow = 'unset'
-      window.removeEventListener('keydown', handleEscape)
-    }
-  }, [project, onClose, showReviewForm])
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [project, onClose, showReviewForm]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  const handleSubmitReview = (e: React.FormEvent) => {
-    e.preventDefault()
-    setReviewSubmitted(true)
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!project) return;
+
+    await addReview({
+      projectId: project._id, // important
+      name: reviewData.name,
+      position: reviewData.position,
+      review: reviewData.review,
+      rating: reviewData.rating,
+      image: previewImage || undefined,
+    });
+
+    setReviewSubmitted(true);
+
     setTimeout(() => {
-      setShowReviewForm(false)
-      setReviewSubmitted(false)
-      setReviewData({ name: '', position: '', review: '', rating: 5 })
-      setPreviewImage(null)
-    }, 2000)
-  }
+      setShowReviewForm(false);
+      setReviewSubmitted(false);
+      setReviewData({
+        name: '',
+        position: '',
+        review: '',
+        rating: 5,
+      });
+      setPreviewImage(null);
+    }, 1500);
+  };
 
   const closeReviewForm = () => {
-    setShowReviewForm(false)
-    setReviewSubmitted(false)
-    setReviewData({ name: '', position: '', review: '', rating: 5 })
-    setPreviewImage(null)
-  }
+    setShowReviewForm(false);
+    setReviewSubmitted(false);
+    setReviewData({
+      name: '',
+      position: '',
+      review: '',
+      rating: 5,
+    });
+    setPreviewImage(null);
+  };
 
   return (
     <AnimatePresence>
@@ -120,34 +157,28 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               <X className="w-5 h-5" />
             </motion.button>
 
-            {/* Header with gradient */}
-            <div className={`relative h-48 md:h-64 bg-gradient-to-br ${categoryGradients[project.category]} overflow-hidden`}>
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', delay: 0.2 }}
-                  className="text-8xl opacity-50"
-                >
-                  {project.category === 'blockchain' && '⛓️'}
-                  {project.category === 'devops' && '⚙️'}
-                  {project.category === 'ethical-hacking' && '🔐'}
-                  {project.category === 'ai' && '🤖'}
-                  {project.category === 'web2' && '🌐'}
-                </motion.span>
-              </div>
-              
-              {/* Title Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-card to-transparent">
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-2xl md:text-4xl font-bold text-white"
-                >
+            {/* Header with image + title overlay */}
+            <div className="relative h-48 md:h-64 overflow-hidden">
+              {project.imageUrl ? (
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div
+                  className={`h-full w-full bg-gradient-to-br ${categoryGradients[project.category]}`}
+                />
+              )}
+
+              {/* dark overlay */}
+              <div className="absolute inset-0 bg-black/40" />
+
+              {/* TITLE OVER IMAGE */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                <h2 className="text-white text-2xl md:text-4xl font-bold drop-shadow-lg">
                   {project.title}
-                </motion.h2>
+                </h2>
               </div>
             </div>
 
@@ -177,9 +208,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 transition={{ delay: 0.2 }}
               >
                 <h3 className="text-lg font-semibold mb-3">About This Project</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {project.longDescription}
-                </p>
+                <p className="text-muted-foreground leading-relaxed">{project.longDescription}</p>
               </motion.div>
 
               {/* Technologies */}
@@ -192,13 +221,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, index) => (
                     <motion.span
-                      key={tech}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3 + index * 0.05 }}
+                      key={tech.id ?? index}
                       className="px-3 py-1.5 text-sm rounded-lg bg-primary/10 border border-primary/20 text-primary"
                     >
-                      {tech}
+                      {tech.name}
                     </motion.span>
                   ))}
                 </div>
@@ -221,7 +247,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                       className="flex items-start gap-3"
                     >
                       <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">{feature}</span>
+                      <span className="text-muted-foreground">{feature.text}</span>
                     </motion.li>
                   ))}
                 </ul>
@@ -238,9 +264,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   <AlertTriangle className="w-5 h-5 text-yellow-500" />
                   <h3 className="text-lg font-semibold">Challenges & Solutions</h3>
                 </div>
-                <p className="text-muted-foreground">
-                  {project.challenges}
-                </p>
+                <p className="text-muted-foreground">{project.challenges}</p>
               </motion.div>
 
               {/* Action Buttons */}
@@ -278,7 +302,9 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold">Project Reviews</h3>
-                    <p className="text-sm text-muted-foreground">Share your experience with this project</p>
+                    <p className="text-sm text-muted-foreground">
+                      Share your experience with this project
+                    </p>
                   </div>
                   <Button
                     onClick={() => setShowReviewForm(true)}
@@ -309,14 +335,14 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   exit={{ opacity: 0 }}
                   className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 />
-                
+
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9, y: 30 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 30 }}
                   transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                   onClick={(e) => e.stopPropagation()}
-                  className="relative w-full max-w-lg rounded-2xl bg-card border border-border shadow-2xl overflow-hidden"
+                  className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-card border border-border shadow-2xl"
                 >
                   {/* Form Header */}
                   <div className="relative p-6 bg-gradient-to-br from-primary/20 to-primary/5 border-b border-border">
@@ -368,14 +394,14 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                       >
                         {/* Profile Picture Upload */}
                         <div className="flex items-center gap-4">
-                          <div 
+                          <div
                             onClick={() => fileInputRef.current?.click()}
                             className="relative w-16 h-16 rounded-full bg-muted border-2 border-dashed border-border hover:border-primary/50 cursor-pointer transition-colors flex items-center justify-center overflow-hidden group"
                           >
                             {previewImage ? (
-                              <img 
-                                src={previewImage} 
-                                alt="Profile preview" 
+                              <img
+                                src={previewImage}
+                                alt="Profile preview"
                                 className="w-full h-full object-cover"
                               />
                             ) : (
@@ -391,7 +417,9 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                           </div>
                           <div className="flex-1">
                             <p className="text-sm font-medium">Profile Picture</p>
-                            <p className="text-xs text-muted-foreground">Click to upload (optional)</p>
+                            <p className="text-xs text-muted-foreground">
+                              Click to upload (optional)
+                            </p>
                           </div>
                         </div>
 
@@ -415,7 +443,9 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                             type="text"
                             required
                             value={reviewData.position}
-                            onChange={(e) => setReviewData({ ...reviewData, position: e.target.value })}
+                            onChange={(e) =>
+                              setReviewData({ ...reviewData, position: e.target.value })
+                            }
                             placeholder="CEO at Company"
                             className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                           />
@@ -453,17 +483,16 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                             required
                             rows={4}
                             value={reviewData.review}
-                            onChange={(e) => setReviewData({ ...reviewData, review: e.target.value })}
+                            onChange={(e) =>
+                              setReviewData({ ...reviewData, review: e.target.value })
+                            }
                             placeholder="Share your experience working on this project..."
                             className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                           />
                         </div>
 
                         {/* Submit Button */}
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                           <Button type="submit" className="w-full gap-2">
                             <CheckCircle2 className="w-4 h-4" />
                             Submit Review
@@ -479,5 +508,5 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }

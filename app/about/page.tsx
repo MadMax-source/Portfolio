@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import AnimatedBackground from '@/components/animated-background';
+import { useReviews } from '@/context/review-context';
 import { useRef, useState, useEffect } from 'react';
 import {
   Github,
@@ -23,6 +24,7 @@ import {
   Zap,
   Trophy,
   BookOpen,
+  Loader2,
 } from 'lucide-react';
 
 const socialLinks = [
@@ -115,49 +117,124 @@ const socialLinks = [
   },
 ];
 
-const skills = [
+const techStacks = [
   {
-    category: 'Frontend',
+    category: 'Web Development',
     icon: Code2,
-    color: 'from-cyan-500 to-blue-500',
-    items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Three.js'],
-  },
-  {
-    category: 'Backend',
-    icon: Database,
-    color: 'from-green-500 to-emerald-500',
-    items: ['Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Redis', 'GraphQL'],
-  },
-  {
-    category: 'DevOps',
-    icon: Cloud,
-    color: 'from-orange-500 to-red-500',
-    items: ['Docker', 'Kubernetes', 'AWS', 'CI/CD', 'Terraform', 'Linux'],
-  },
-  {
-    category: 'Blockchain',
-    icon: Blocks,
-    color: 'from-purple-500 to-pink-500',
-    items: ['Solidity', 'Web3.js', 'Ethers.js', 'Hardhat', 'Smart Contracts', 'DeFi'],
-  },
-  {
-    category: 'Security',
-    icon: Shield,
-    color: 'from-red-500 to-rose-500',
-    items: [
-      'Penetration Testing',
-      'OWASP',
-      'Burp Suite',
-      'Metasploit',
-      'Network Security',
-      'Cryptography',
+    skills: [
+      'JavaScript',
+      'Next.js',
+      'TypeScript',
+      'React',
+      'Golang',
+      'Node.js',
+      'Express',
+      'MongoDB',
+      'PostgreSQL',
+      'REST APIs',
+      'NestJS',
+      'GraphQL',
     ],
+    color: 'from-blue-500/20 to-cyan-500/20',
+    borderColor: 'hover:border-blue-500/50',
   },
+
   {
-    category: 'AI/ML',
+    category: 'Ethereum Blockchain',
+    icon: Blocks,
+    skills: [
+      'Solidity',
+      'Hardhat',
+      'Ethers.js',
+      'WalletConnect',
+      'Layer 2 Networks',
+      'ERC-20',
+      'ERC-721',
+      'ERC-1155',
+      'Smart Contract Audits',
+    ],
+    color: 'from-indigo-500/20 to-violet-500/20',
+    borderColor: 'hover:border-indigo-500/50',
+  },
+
+  {
+    category: 'Solana Blockchain',
+    icon: Blocks,
+    skills: [
+      'Rust Smart Contracts',
+      'Anchor',
+      'Solana CLI',
+      'solana-web3.js',
+      'Metaplex',
+      'NFT Standards',
+      'DeFi Protocols',
+      'DApp Development',
+      'Smart Contract Security',
+    ],
+    color: 'from-pink-500/20 to-rose-500/20',
+    borderColor: 'hover:border-pink-500/50',
+  },
+
+  {
+    category: 'DevOps Engineering',
+    icon: Cloud,
+    skills: [
+      'AWS',
+      'Docker',
+      'Kubernetes',
+      'CI/CD',
+      'Containers',
+      'Images',
+      'Volumes',
+      'Registries',
+      'Networks',
+      'CloudFormation',
+      'Terraform',
+    ],
+    color: 'from-orange-500/20 to-amber-500/20',
+    borderColor: 'hover:border-orange-500/50',
+  },
+
+  {
+    category: 'AI',
     icon: Brain,
-    color: 'from-violet-500 to-purple-500',
-    items: ['TensorFlow', 'PyTorch', 'OpenAI API', 'LangChain', 'Computer Vision', 'NLP'],
+    skills: [
+      'Python',
+      'Maths',
+      'PyTorch',
+      'Pandas',
+      'NumPy',
+      'Jupyter Notebook',
+      'TensorFlow',
+      'NLP (Chatbots, LLMs)',
+      'Machine Learning',
+      'Computer Vision',
+      'Deep Learning',
+      'MLOps / Model Deployment',
+      'Data Analysis',
+    ],
+    color: 'from-green-500/20 to-emerald-500/20',
+    borderColor: 'hover:border-green-500/50',
+  },
+
+  {
+    category: 'Ethical Hacking',
+    icon: Shield,
+    skills: [
+      'Kali Linux',
+      'Bash Scripting',
+      'Python Scripting',
+      'Penetration Testing',
+      'Wireshark',
+      'Metasploit',
+      'Burp Suite',
+      'Nmap',
+      'Malware Analysis',
+      'SOC Analysis',
+      'Reverse Engineering',
+    ],
+    color: 'from-gray-500/20 to-slate-500/20',
+    borderColor: 'hover:border-gray-500/50',
   },
 ];
 
@@ -209,37 +286,6 @@ const education = [
   },
 ];
 
-const testimonials = [
-  {
-    name: 'John Smith',
-    role: 'CEO at TechStartup',
-    rating: 5,
-    text: 'Exceptional work on our blockchain platform. Delivered ahead of schedule with outstanding code quality.',
-    project: 'DeFi Exchange Platform',
-  },
-  {
-    name: 'Sarah Johnson',
-    role: 'CTO at FinanceApp',
-    rating: 5,
-    text: 'Incredible attention to detail and security expertise. Our penetration testing revealed zero critical vulnerabilities.',
-    project: 'Banking Security Audit',
-  },
-  {
-    name: 'Michael Chen',
-    role: 'Founder at AI Labs',
-    rating: 5,
-    text: 'Built an amazing AI-powered dashboard. The 3D visualizations and real-time data handling exceeded expectations.',
-    project: 'AI Analytics Dashboard',
-  },
-  {
-    name: 'Emily Davis',
-    role: 'Product Manager at CloudCorp',
-    rating: 5,
-    text: 'Outstanding DevOps implementation. Our deployment time reduced by 80% and infrastructure costs dropped significantly.',
-    project: 'Cloud Infrastructure Setup',
-  },
-];
-
 const floatingTechItems = [
   { name: 'React', x: '10%', y: '20%', delay: 0 },
   { name: 'Node.js', x: '85%', y: '15%', delay: 0.5 },
@@ -282,6 +328,10 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 }
 
 export default function AboutPage() {
+  const { reviews, fetchReviews, loading } = useReviews();
+  useEffect(() => {
+    fetchReviews();
+  }, []);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -686,32 +736,32 @@ export default function AboutPage() {
             }}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {skills.map((skill, index) => (
+            {techStacks.map((stack, index) => (
               <motion.div
-                key={skill.category}
+                key={stack.category}
                 variants={{
                   hidden: { opacity: 0, y: 30, rotateX: -15 },
                   visible: { opacity: 1, y: 0, rotateX: 0 },
                 }}
                 whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 relative overflow-hidden group"
+                className={`bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 relative overflow-hidden group transition-all duration-300 ${stack.borderColor}`}
               >
                 <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-gradient-to-br ${stack.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
                 />
                 <motion.div
-                  className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${skill.color} rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
+                  className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${stack.color} rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
                 />
                 <motion.div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${skill.color} flex items-center justify-center mb-4 shadow-lg`}
+                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stack.color} flex items-center justify-center mb-4 shadow-lg`}
                   whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <skill.icon className="w-7 h-7 text-white" />
+                  <stack.icon className="w-7 h-7 text-white" />
                 </motion.div>
-                <h3 className="text-xl font-semibold mb-4">{skill.category}</h3>
+                <h3 className="text-xl font-semibold mb-4">{stack.category}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {skill.items.map((item, i) => (
+                  {stack.skills.map((item, i) => (
                     <motion.span
                       key={item}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -976,73 +1026,75 @@ export default function AboutPage() {
             </motion.p>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              visible: { transition: { staggerChildren: 0.1 } },
-            }}
-            className="grid md:grid-cols-2 gap-6"
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                variants={{
-                  hidden: { opacity: 0, scale: 0.9 },
-                  visible: { opacity: 1, scale: 1 },
-                }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 relative group"
-              >
+          {loading ? (
+            <div className="text-center py-10">
+              <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto" />
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              No reviews available at the moment.
+            </div>
+          ) : (
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.1 } },
+              }}
+              className="grid md:grid-cols-2 gap-6"
+            >
+              {reviews.map((review, index) => (
                 <motion.div
-                  className="absolute top-4 right-4 text-6xl text-primary/10 font-serif"
-                  animate={{ rotate: [0, 10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity }}
+                  key={review._id}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.9 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 relative group"
                 >
-                  &ldquo;
-                </motion.div>
-                <div className="flex items-center gap-4 mb-4">
                   <motion.div
-                    className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg shadow-lg"
-                    whileHover={{ scale: 1.1 }}
+                    className="absolute top-4 right-4 text-6xl text-primary/10 font-serif"
+                    animate={{ rotate: [0, 10, 0] }}
+                    transition={{ duration: 5, repeat: Infinity }}
                   >
-                    {testimonial.name
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')}
+                    &ldquo;
                   </motion.div>
-                  <div>
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+
+                  <div className="flex items-center gap-4 mb-4">
+                    {review.imageUrl ? (
+                      <img
+                        src={review.imageUrl}
+                        alt={review.name}
+                        className="w-14 h-14 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
+                        {review.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')}
+                      </div>
+                    )}
+
+                    <div>
+                      <h4 className="font-semibold">{review.name}</h4>
+                      <p className="text-sm text-muted-foreground">{review.position}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-1 mb-3">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.1 * i }}
-                    >
-                      <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                    </motion.div>
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4 relative z-10">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
-                <motion.div
-                  className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-xs text-primary"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Sparkles className="w-3 h-3" />
-                  {testimonial.project}
+
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                    ))}
+                  </div>
+
+                  <p className="text-muted-foreground">&ldquo;{review.review}&rdquo;</p>
                 </motion.div>
-              </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </section>
 

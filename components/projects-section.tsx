@@ -5,44 +5,7 @@ import { ExternalLink, Github, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
-
-const projects = [
-  {
-    id: 1,
-    title: 'E-Commerce Platform',
-    description:
-      'A full-stack e-commerce solution with real-time inventory, payment processing, and admin dashboard.',
-    tags: ['Next.js', 'TypeScript', 'Stripe', 'PostgreSQL'],
-    image:
-      'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=800&auto=format&fit=crop&q=60',
-    liveUrl: '#',
-    githubUrl: '#',
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'AI Dashboard',
-    description:
-      'Interactive dashboard for monitoring AI model performance with real-time analytics.',
-    tags: ['React', 'D3.js', 'Python', 'FastAPI'],
-    image:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60',
-    liveUrl: '#',
-    githubUrl: '#',
-    featured: true,
-  },
-  {
-    id: 3,
-    title: 'Social Media App',
-    description: 'Real-time social platform with stories, messaging, and content recommendation.',
-    tags: ['React Native', 'Node.js', 'Socket.io', 'MongoDB'],
-    image:
-      'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&auto=format&fit=crop&q=60',
-    liveUrl: '#',
-    githubUrl: '#',
-    featured: true,
-  },
-];
+import { useProjects } from '@/context/project-context';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -67,6 +30,28 @@ const itemVariants = {
 };
 
 export default function ProjectsSection() {
+  const { projects, loading } = useProjects();
+
+  if (loading) {
+    return (
+      <section className="py-24">
+        <div className="container mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-lg text-muted-foreground"
+          >
+            Loading projects...
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
+  const latestProjects = [...projects]
+    .sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime())
+    .slice(0, 3);
   return (
     <section id="projects" className="py-24 relative overflow-hidden">
       {/* Background Elements */}
@@ -107,9 +92,9 @@ export default function ProjectsSection() {
           viewport={{ once: true, margin: '-100px' }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {projects.map((project) => (
+          {latestProjects.map((project) => (
             <motion.div
-              key={project.id}
+              key={project._id}
               variants={itemVariants}
               whileHover={{ y: -8 }}
               transition={{ type: 'spring', stiffness: 300 }}
@@ -118,7 +103,7 @@ export default function ProjectsSection() {
                 {/* Project Image */}
                 <div className="relative aspect-video overflow-hidden">
                   <motion.img
-                    src={project.image}
+                    src={project.imageUrl}
                     alt={project.title}
                     className="object-cover w-full h-full"
                     whileHover={{ scale: 1.05 }}
@@ -158,12 +143,12 @@ export default function ProjectsSection() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
+                    {project.technologies?.map((tech) => (
                       <span
-                        key={tag}
+                        key={tech.id}
                         className="px-2.5 py-1 text-xs font-medium rounded-md bg-secondary/50 text-secondary-foreground"
                       >
-                        {tag}
+                        {tech.name}
                       </span>
                     ))}
                   </div>
