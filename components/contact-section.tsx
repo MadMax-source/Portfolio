@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,8 +12,8 @@ const contactInfo = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'hello@joblawal33@gmail.com',
-    href: 'mailto:hello@joblawal33@gmail.com',
+    value: 'joblawal33@gmail.com',
+    href: 'mailto:joblawal33@gmail.com',
   },
   {
     icon: Phone,
@@ -29,6 +30,77 @@ const contactInfo = [
 ];
 
 export default function ContactSection() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [modal, setModal] = useState<{
+    open: boolean;
+    success: boolean;
+    message: string;
+  }>({
+    open: false,
+    success: false,
+    message: '',
+  });
+
+  const [sending, setSending] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setSending(true);
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setModal({
+          open: true,
+          success: true,
+          message: 'Message sent successfully. I will get back to you soon.',
+        });
+
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        setModal({
+          open: true,
+          success: false,
+          message: data.message || 'Something went wrong',
+        });
+      }
+    } catch (error) {
+      setModal({
+        open: true,
+        success: false,
+        message: 'Failed to send message',
+      });
+    } finally {
+      setSending(false);
+    }
+  };
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -73,7 +145,7 @@ export default function ContactSection() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-4">
                 <motion.div whileFocus={{ scale: 1.02 }} className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium">
@@ -81,6 +153,8 @@ export default function ContactSection() {
                   </label>
                   <Input
                     id="name"
+                    onChange={handleChange}
+                    value={formData.name}
                     placeholder="your name"
                     className="bg-secondary/30 border-border/50 focus:border-primary/50"
                   />
@@ -93,6 +167,8 @@ export default function ContactSection() {
                     id="email"
                     type="email"
                     placeholder="name@example.com"
+                    onChange={handleChange}
+                    value={formData.email}
                     className="bg-secondary/30 border-border/50 focus:border-primary/50"
                   />
                 </motion.div>
@@ -101,11 +177,20 @@ export default function ContactSection() {
                 <label htmlFor="subject" className="text-sm font-medium">
                   Subject
                 </label>
-                <Input
+                <select
                   id="subject"
-                  placeholder="Project inquiry"
-                  className="bg-secondary/30 border-border/50 focus:border-primary/50"
-                />
+                  value={formData.subject}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, subject: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/30 border border-border/50 focus:border-primary/50"
+                  required
+                >
+                  <option value="">Select a subject</option>
+                  <option value="Project Inquiry">Project Inquiry</option>
+                  <option value="Collaboration">Collaboration</option>
+                  <option value="Job Opportunity">Job Opportunity</option>
+                  <option value="General Question">General Question</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
               <div className="space-y-2">
                 <label htmlFor="message" className="text-sm font-medium">
@@ -115,13 +200,15 @@ export default function ContactSection() {
                   id="message"
                   placeholder="Tell me about your project..."
                   rows={5}
+                  onChange={handleChange}
+                  value={formData.message}
                   className="bg-secondary/30 border-border/50 focus:border-primary/50 resize-none"
                 />
               </div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button type="submit" size="lg" className="w-full sm:w-auto">
+                <Button type="submit" disabled={sending} size="lg" className="w-full sm:w-auto">
                   <Send className="mr-2 h-4 w-4" />
-                  Send Message
+                  {sending ? 'Sending...' : 'Send Message'}
                 </Button>
               </motion.div>
             </form>
@@ -185,6 +272,52 @@ export default function ContactSection() {
           </motion.div>
         </div>
       </div>
+      {modal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md mx-4 bg-card border border-border rounded-2xl p-6 shadow-2xl">
+            <div className="flex flex-col items-center text-center">
+              <div
+                className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 ${
+                  modal.success ? 'bg-green-500/20' : 'bg-red-500/20'
+                }`}
+              >
+                {modal.success ? (
+                  <svg
+                    className="w-10 h-10 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-10 h-10 text-red-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </div>
+
+              <h3 className="text-2xl font-bold mb-2">{modal.success ? 'Success!' : 'Failed!'}</h3>
+
+              <p className="text-muted-foreground mb-6">{modal.message}</p>
+
+              <button
+                onClick={() => setModal({ open: false, success: false, message: '' })}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-cyan-500 text-white font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

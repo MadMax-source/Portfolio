@@ -1,17 +1,10 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Navbar from '@/components/navbar'
-import Footer from '@/components/footer'
-import { 
-  Mail, 
-  MessageCircle, 
-  Send,
-  ArrowRight,
-  MapPin,
-  Clock
-} from 'lucide-react'
-import { useState } from 'react'
+import { motion } from 'framer-motion';
+import Navbar from '@/components/navbar';
+import Footer from '@/components/footer';
+import { Mail, MessageCircle, Send, ArrowRight, MapPin, Clock } from 'lucide-react';
+import { useState } from 'react';
 
 const contactMethods = [
   {
@@ -20,7 +13,7 @@ const contactMethods = [
     value: 'your.email@gmail.com',
     href: 'mailto:your.email@gmail.com?subject=Project%20Inquiry',
     color: 'from-red-500 to-orange-500',
-    description: 'Best for detailed project requests'
+    description: 'Best for detailed project requests',
   },
   {
     icon: MessageCircle,
@@ -28,7 +21,7 @@ const contactMethods = [
     value: '+1 234 567 8900',
     href: 'https://wa.me/1234567890',
     color: 'from-green-500 to-emerald-500',
-    description: 'Quick responses during business hours'
+    description: 'Quick responses during business hours',
   },
   {
     icon: Send,
@@ -36,37 +29,84 @@ const contactMethods = [
     value: '@yourusername',
     href: 'https://t.me/yourusername',
     color: 'from-blue-500 to-cyan-500',
-    description: 'Available for instant messaging'
+    description: 'Available for instant messaging',
   },
-]
+];
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
-  })
+    message: '',
+  });
+  const [sending, setSending] = useState(false);
+  const [modal, setModal] = useState({
+    open: false,
+    success: false,
+    message: '',
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const mailtoLink = `mailto:your.email@gmail.com?subject=${encodeURIComponent(formData.subject || 'Project Inquiry')}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    )}`
-    window.location.href = mailtoLink
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setModal({
+          open: true,
+          success: true,
+          message: 'Your message has been sent successfully. I will get back to you soon.',
+        });
+
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        setModal({
+          open: true,
+          success: false,
+          message: data.message,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+
+      setModal({
+        open: true,
+        success: false,
+        message: 'Failed to send message',
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 px-4 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
@@ -103,8 +143,8 @@ export default function ContactPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg text-muted-foreground max-w-2xl mx-auto"
           >
-            Have a project in mind? I&apos;d love to hear about it. Send me a message 
-            and I&apos;ll get back to you as soon as possible.
+            Have a project in mind? I&apos;d love to hear about it. Send me a message and I&apos;ll
+            get back to you as soon as possible.
           </motion.p>
         </div>
       </section>
@@ -125,10 +165,12 @@ export default function ContactPage() {
                 whileHover={{ y: -5, scale: 1.02 }}
                 className="group relative p-6 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300"
               >
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${method.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div
+                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${method.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
                   <method.icon className="w-7 h-7 text-white" />
                 </div>
-                
+
                 <h3 className="text-xl font-semibold mb-1">{method.label}</h3>
                 <p className="text-primary font-medium mb-2">{method.value}</p>
                 <p className="text-sm text-muted-foreground">{method.description}</p>
@@ -157,7 +199,8 @@ export default function ContactPage() {
               <div className="p-8 rounded-2xl bg-card border border-border">
                 <h2 className="text-2xl font-bold mb-2">Send a Message</h2>
                 <p className="text-muted-foreground mb-8">
-                  Fill out the form below and it will open your email client to send me your request.
+                  Fill out the form below and it will open your email client to send me your
+                  request.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -233,12 +276,18 @@ export default function ContactPage() {
 
                   <motion.button
                     type="submit"
+                    disabled={sending}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-cyan-500 text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/25 transition-shadow"
+                    className={`w-full py-4 rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-all
+${
+  sending
+    ? 'opacity-70 cursor-not-allowed bg-gray-500'
+    : 'bg-gradient-to-r from-primary to-cyan-500 hover:shadow-lg hover:shadow-primary/25'
+}`}
                   >
                     <Mail className="w-5 h-5" />
-                    Send via Email
+                    {sending ? 'Sending...' : 'Send Message'}
                   </motion.button>
                 </form>
               </div>
@@ -259,7 +308,8 @@ export default function ContactPage() {
                   <span className="font-semibold">Available for Projects</span>
                 </div>
                 <p className="text-muted-foreground text-sm">
-                  I&apos;m currently accepting new projects and would love to discuss how I can help bring your ideas to life.
+                  I&apos;m currently accepting new projects and would love to discuss how I can help
+                  bring your ideas to life.
                 </p>
               </div>
 
@@ -270,7 +320,8 @@ export default function ContactPage() {
                   <span className="font-semibold">Response Time</span>
                 </div>
                 <p className="text-muted-foreground text-sm">
-                  I typically respond within 24 hours. For urgent matters, reach out via WhatsApp or Telegram.
+                  I typically respond within 24 hours. For urgent matters, reach out via WhatsApp or
+                  Telegram.
                 </p>
               </div>
 
@@ -326,8 +377,59 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+      {modal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md mx-4 bg-card border border-border rounded-2xl p-6 shadow-2xl">
+            <div className="flex flex-col items-center text-center">
+              <div
+                className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 ${
+                  modal.success ? 'bg-green-500/20' : 'bg-red-500/20'
+                }`}
+              >
+                {modal.success ? (
+                  <svg
+                    className="w-10 h-10 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-10 h-10 text-red-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </div>
 
+              <h3 className="text-2xl font-bold mb-2">{modal.success ? 'Success!' : 'Failed!'}</h3>
+
+              <p className="text-muted-foreground mb-6">{modal.message}</p>
+
+              <button
+                onClick={() =>
+                  setModal({
+                    open: false,
+                    success: false,
+                    message: '',
+                  })
+                }
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-cyan-500 text-white font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </main>
-  )
+  );
 }
