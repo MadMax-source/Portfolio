@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Download, Sparkles } from 'lucide-react'
-import Link from 'next/link'
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Download, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 const stats = [
   { value: '5+', label: 'Years Experience' },
   { value: '50+', label: 'Projects Completed' },
   { value: '30+', label: 'Happy Clients' },
   { value: '10+', label: 'Technologies' },
-]
+];
 
 export default function AboutSection() {
   return (
@@ -52,7 +52,7 @@ export default function AboutSection() {
                 }}
                 className="absolute inset-4 rounded-full border border-dashed border-accent/30"
               />
-              
+
               {/* Profile Image Placeholder */}
               <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center overflow-hidden">
                 <motion.div
@@ -77,7 +77,7 @@ export default function AboutSection() {
                   Creative
                 </span>
               </motion.div>
-              
+
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity }}
@@ -107,22 +107,21 @@ export default function AboutSection() {
             >
               About Me
             </motion.span>
-            
+
             <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-balance">
-              Passionate About Creating{' '}
-              <span className="gradient-text">Digital Excellence</span>
+              Passionate About Creating <span className="gradient-text">Digital Excellence</span>
             </h2>
-            
+
             <div className="space-y-4 text-muted-foreground mb-8">
               <p className="text-pretty">
-                I&apos;m a creative developer with a passion for building beautiful, functional, 
-                and user-friendly digital experiences. With over 5 years of experience in 
-                full-stack development, I specialize in crafting modern web applications.
+                I&apos;m a creative developer with a passion for building beautiful, functional, and
+                user-friendly digital experiences. With over 5 years of experience in full-stack
+                development, I specialize in crafting modern web applications.
               </p>
               <p className="text-pretty">
-                My journey in tech started with a curiosity about how things work on the web. 
-                Today, I combine technical expertise with creative vision to deliver projects 
-                that not only meet requirements but exceed expectations.
+                My journey in tech started with a curiosity about how things work on the web. Today,
+                I combine technical expertise with creative vision to deliver projects that not only
+                meet requirements but exceed expectations.
               </p>
             </div>
 
@@ -144,12 +143,8 @@ export default function AboutSection() {
                   whileHover={{ scale: 1.05 }}
                   className="text-center p-4 rounded-xl bg-secondary/30 border border-border/50"
                 >
-                  <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
+                  <div className="text-2xl sm:text-3xl font-bold gradient-text">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -158,15 +153,15 @@ export default function AboutSection() {
             <div className="flex flex-wrap gap-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button asChild size="lg">
-                  <Link href="#contact">
-                    Let&apos;s Work Together
-                  </Link>
+                  <Link href="#contact">Let&apos;s Work Together</Link>
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download CV
+                <Button asChild size="lg">
+                  <Link href="/cv.pdf" target="_blank" rel="noopener noreferrer">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download CV
+                  </Link>
                 </Button>
               </motion.div>
             </div>
@@ -174,5 +169,5 @@ export default function AboutSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

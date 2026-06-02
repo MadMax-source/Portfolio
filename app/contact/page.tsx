@@ -10,24 +10,24 @@ const contactMethods = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'your.email@gmail.com',
-    href: 'mailto:your.email@gmail.com?subject=Project%20Inquiry',
+    value: 'joblawal33@gmail.com',
+    href: 'mailto:joblawal33@gmail.com?subject=Project%20Inquiry',
     color: 'from-red-500 to-orange-500',
     description: 'Best for detailed project requests',
   },
   {
     icon: MessageCircle,
     label: 'WhatsApp',
-    value: '+1 234 567 8900',
-    href: 'https://wa.me/1234567890',
+    value: '+234 907 876 9622',
+    href: 'https://wa.me/2349078769622',
     color: 'from-green-500 to-emerald-500',
     description: 'Quick responses during business hours',
   },
   {
     icon: Send,
     label: 'Telegram',
-    value: '@yourusername',
-    href: 'https://t.me/yourusername',
+    value: '@devlord33',
+    href: 'https://t.me/devlord33',
     color: 'from-blue-500 to-cyan-500',
     description: 'Available for instant messaging',
   },
@@ -341,7 +341,7 @@ ${
                 <h3 className="font-semibold mb-4">Prefer Instant Messaging?</h3>
                 <div className="space-y-3">
                   <a
-                    href="https://wa.me/1234567890"
+                    href="https://wa.me/2349078769622"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 rounded-xl bg-background/50 hover:bg-background transition-colors group"
@@ -351,13 +351,13 @@ ${
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-sm">WhatsApp</p>
-                      <p className="text-xs text-muted-foreground">+1 234 567 8900</p>
+                      <p className="text-xs text-muted-foreground">+234 907 876 9622</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   </a>
 
                   <a
-                    href="https://t.me/yourusername"
+                    href="https://t.me/devlord33"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 rounded-xl bg-background/50 hover:bg-background transition-colors group"
@@ -367,7 +367,7 @@ ${
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-sm">Telegram</p>
-                      <p className="text-xs text-muted-foreground">@yourusername</p>
+                      <p className="text-xs text-muted-foreground">@devlord33</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   </a>

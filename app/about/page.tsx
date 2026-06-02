@@ -5,6 +5,19 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import AnimatedBackground from '@/components/animated-background';
 import { useReviews } from '@/context/review-context';
+
+import {
+  FaGithub,
+  FaLinkedin,
+  FaWhatsapp,
+  FaFacebook,
+  FaDiscord,
+  FaTelegramPlane,
+} from 'react-icons/fa';
+
+import { SiGmail, SiUpwork } from 'react-icons/si';
+
+import { Globe, Rocket, Wifi } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import {
   Github,
@@ -26,7 +39,155 @@ import {
   BookOpen,
   Loader2,
 } from 'lucide-react';
+import { useSocials } from '@/context/social-context';
 
+const GithubIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M12 .5C5.7.5.5 5.8.5 12.2c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.3-3.9-1.3-.5-1.2-1.2-1.6-1.2-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.9 2 .9 2 .9 1.5 2.5 1.1 3.1.8.1-.7.4-1.1.7-1.4-2.5-.3-5.2-1.3-5.2-5.8 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2.9-.2 1.8-.3 2.7-.3s1.8.1 2.7.3c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.7.9 1.2 2 1.2 3.3 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.2.8 2.5v3.7c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.8 18.3.5 12 .5z" />
+  </svg>
+);
+
+const LinkedinIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 24h5V7H0v17zM8 7h4.8v2.3h.1c.7-1.3 2.4-2.7 5-2.7 5.3 0 6.3 3.5 6.3 8V24h-5v-7.5c0-1.8 0-4.1-2.5-4.1s-2.9 2-2.9 4V24H8V7z" />
+  </svg>
+);
+
+const XIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.9 2H22l-6.8 7.8L23 22h-6.8l-5.3-6.7L4.9 22H2l7.3-8.4L1 2h6.9l4.8 6.1L18.9 2z" />
+  </svg>
+);
+
+const WhatsAppIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.7 5.9L0 24l6.3-1.7A12 12 0 0 0 24 12c0-3.2-1.3-6.2-3.5-8.5z" />
+  </svg>
+);
+
+const FacebookIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8v-3h2.4V9.5c0-2.4 1.4-3.7 3.6-3.7 1 0 2 .1 2 .1v2.2h-1.1c-1.1 0-1.5.7-1.5 1.4V12H16l-.4 3h-2.2v7A10 10 0 0 0 22 12z" />
+  </svg>
+);
+
+const DiscordIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M20.3 4.3A16 16 0 0 0 16 3l-.2.4A15 15 0 0 0 12 3a15 15 0 0 0-3.8.4L8 3A16 16 0 0 0 3.7 4.3C1.3 7.5.5 10.6.8 13.8A16 16 0 0 0 6 16.5l.8-1.2a10 10 0 0 1-1.6-.8l.4-.3a10 10 0 0 0 8.8 0l.4.3c-.5.3-1 .6-1.6.8l.8 1.2a16 16 0 0 0 5.2-2.7c.3-3.2-.5-6.3-2.9-9.5z" />
+  </svg>
+);
+
+const TelegramIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M9.7 16.3 9.3 21c.6 0 .9-.3 1.3-.7l2.8-2.7 5.8 4.2c1.1.6 1.9.3 2.2-1l4-18.7c.3-1.4-.5-2-1.6-1.6L1.7 9.4C.4 9.8.4 10.6 1.5 11l4.7 1.5 11-6.9c.5-.3.9-.1.5.2L9.7 16.3z" />
+  </svg>
+);
+
+const FiverrIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M7 7h10v3H7V7zm0 4h10v10H7V11z" />
+  </svg>
+);
+
+const UpworkIcon = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.5 10c-1.7 0-3.2 1-4.2 2.4C13 10.8 11.7 9 9.5 9 6.5 9 4 11.5 4 14.5S6.5 20 9.5 20c1.7 0 3.2-1 4.2-2.4 1.1 1.6 2.4 3.4 4.8 3.4 3 0 5.5-2.5 5.5-5.5S21.5 10 18.5 10z" />
+  </svg>
+);
+
+const WellfoundIcon = ({ className = '' }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 2c4.4 0 8 3.6 8 8s-3.6 8-8 8-8-3.6-8-8 3.6-8 8-8zm-1 3v10h2V7h-2zm0 12v2h2v-2h-2z" />
+  </svg>
+);
+
+export const socialMeta = {
+  github: {
+    icon: FaGithub,
+    color: 'hover:bg-[#181717] hover:text-white',
+    hoverGlow: 'hover:shadow-gray-500/50',
+  },
+
+  linkedin: {
+    icon: FaLinkedin,
+    color: 'hover:bg-[#0A66C2] hover:text-white',
+    hoverGlow: 'hover:shadow-blue-500/50',
+  },
+
+  gmail: {
+    icon: SiGmail,
+    color: 'hover:bg-[#EA4335] hover:text-white',
+    hoverGlow: 'hover:shadow-red-500/50',
+  },
+
+  x: {
+    icon: XIcon,
+    color: 'hover:bg-black hover:text-white',
+    hoverGlow: 'hover:shadow-gray-500/50',
+  },
+
+  whatsapp: {
+    icon: FaWhatsapp,
+    color: 'hover:bg-[#25D366] hover:text-white',
+    hoverGlow: 'hover:shadow-green-500/50',
+  },
+
+  facebook: {
+    icon: FaFacebook,
+    color: 'hover:bg-[#1877F2] hover:text-white',
+    hoverGlow: 'hover:shadow-blue-500/50',
+  },
+
+  discord: {
+    icon: FaDiscord,
+    color: 'hover:bg-[#5865F2] hover:text-white',
+    hoverGlow: 'hover:shadow-indigo-500/50',
+  },
+
+  telegram: {
+    icon: FaTelegramPlane,
+    color: 'hover:bg-[#26A5E4] hover:text-white',
+    hoverGlow: 'hover:shadow-cyan-500/50',
+  },
+
+  fiverr: {
+    icon: FiverrIcon,
+    color: 'hover:bg-[#1DBF73] hover:text-white',
+    hoverGlow: 'hover:shadow-emerald-500/50',
+  },
+
+  upwork: {
+    icon: SiUpwork,
+    color: 'hover:bg-[#14A800] hover:text-white',
+    hoverGlow: 'hover:shadow-green-500/50',
+  },
+
+  cryptojobslist: {
+    icon: Globe,
+    color: 'hover:bg-[#6366F1] hover:text-white',
+    hoverGlow: 'hover:shadow-indigo-500/50',
+  },
+
+  web3career: {
+    icon: Rocket,
+    color: 'hover:bg-[#8B5CF6] hover:text-white',
+    hoverGlow: 'hover:shadow-violet-500/50',
+  },
+
+  remote3: {
+    icon: Wifi,
+    color: 'hover:bg-[#0EA5E9] hover:text-white',
+    hoverGlow: 'hover:shadow-sky-500/50',
+  },
+
+  wellfound: {
+    icon: WellfoundIcon,
+    color: 'hover:bg-[#FF5252] hover:text-white',
+    hoverGlow: 'hover:shadow-red-500/50',
+  },
+} as const;
+
+/*
 const socialLinks = [
   {
     name: 'GitHub',
@@ -117,6 +278,9 @@ const socialLinks = [
   },
 ];
 
+*/
+
+// TECH STACKS
 const techStacks = [
   {
     category: 'Web Development',
@@ -329,6 +493,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 
 export default function AboutPage() {
   const { reviews, fetchReviews, loading } = useReviews();
+  const { socials } = useSocials();
   useEffect(() => {
     fetchReviews();
   }, []);
@@ -643,23 +808,34 @@ export default function AboutPage() {
                 transition={{ delay: 1.2 }}
                 className="flex flex-wrap justify-center lg:justify-start gap-3"
               >
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ delay: 1.3 + index * 0.05 }}
-                    whileHover={{ scale: 1.15, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`p-3 rounded-xl bg-card border border-border transition-all duration-300 shadow-lg ${social.color} ${social.hoverGlow} hover:shadow-xl`}
-                    title={social.name}
-                  >
-                    <social.icon />
-                  </motion.a>
-                ))}
+                {socials
+                  .filter((social) => social.url)
+                  .map((social) => {
+                    const meta = socialMeta[social.platform as keyof typeof socialMeta];
+
+                    if (!meta) return null;
+
+                    const Icon = meta.icon;
+
+                    return (
+                      <motion.a
+                        key={social.platform}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`
+          p-3 rounded-xl
+          bg-card border border-border
+          transition-all duration-300
+          shadow-lg hover:shadow-xl
+          ${meta.color}
+          ${meta.hoverGlow}
+        `}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </motion.a>
+                    );
+                  })}
               </motion.div>
             </div>
           </motion.div>

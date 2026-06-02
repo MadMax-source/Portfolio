@@ -21,6 +21,7 @@ import {
   ExternalLink,
   LucideIcon,
 } from 'lucide-react';
+import { useSocials } from '@/context/social-context';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -142,38 +143,63 @@ const placeholderUrls: Record<string, string> = {
 };
 
 export function SocialLinks() {
-  const [links, setLinks] = useState<SocialLink[]>(
-    socialPlatforms.map((p) => ({
-      ...p,
-      id: p.platform,
-      url: '',
-    })),
-  );
+  const { socials, setSocials, saveSocials } = useSocials();
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const updateUrl = (platform: string, url: string) => {
-    setLinks((prev) => prev.map((l) => (l.platform === platform ? { ...l, url } : l)));
+    setSocials((prev) => {
+      const exists = prev.find((s) => s.platform === platform);
+
+      if (exists) {
+        return prev.map((s) => (s.platform === platform ? { ...s, url } : s));
+      }
+
+      const info = socialPlatforms.find((p) => p.platform === platform);
+
+      return [
+        ...prev,
+        {
+          platform,
+          label: info?.label || platform,
+          url,
+        },
+      ];
+    });
   };
 
+  const links = socialPlatforms.map((platform) => {
+    const existing = socials.find((s) => s.platform === platform.platform);
+
+    return {
+      ...platform,
+      id: platform.platform,
+      url: existing?.url || '',
+    };
+  });
+
   const removeLink = (platform: string) => {
-    setLinks((prev) => prev.map((l) => (l.platform === platform ? { ...l, url: '' } : l)));
+    setSocials((prev) =>
+      prev.map((social) => (social.platform === platform ? { ...social, url: '' } : social)),
+    );
   };
 
   const handleSave = async () => {
     setSaving(true);
 
-    await new Promise((r) => setTimeout(r, 1200));
+    await saveSocials();
 
     setSaving(false);
     setSaved(true);
 
-    setTimeout(() => setSaved(false), 3000);
+    setTimeout(() => {
+      setSaved(false);
+    }, 3000);
   };
 
   const activeLinks = links.filter((l) => l.url.trim());
-  const inactiveLinks = links.filter((l) => !l.url.trim());
+  //  const inactiveLinks = links.filter((l) => !l.url.trim());
 
   return (
     <div className="space-y-8">
