@@ -85,9 +85,9 @@ const socialLinks = [
 ];
 
 // Your name - update this
-const firstName = 'Lawal';
-const lastName = 'Job';
-const tagline = 'Software Engineer';
+const firstName = 'cryptosis';
+const lastName = 'dev';
+const tagline = 'Software Engineer & Web3 Marketer';
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
@@ -231,8 +231,8 @@ export default function HeroSection() {
             variants={itemVariants}
             className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 text-pretty leading-relaxed"
           >
-            I build exceptional digital experiences that live at the intersection of design and
-            technology. Specializing in blockchain, AI, and Ethical Hacking
+            I build exceptional digital experiences at the intersection of Web3, blockchain innovation,
+            and ethical hacking. Specializing in full-stack development and security-first architecture.
           </motion.p>
 
           {/* Stats Row */}
@@ -361,45 +361,68 @@ export default function HeroSection() {
         </motion.a>
       </motion.div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements with Parallax Depth */}
       <motion.div
-        className="absolute top-1/4 left-10 w-20 h-20 border border-primary/20 rounded-lg"
+        className="absolute top-1/4 left-10 w-32 h-32 border-2 border-primary/20 rounded-lg backdrop-blur-sm"
         animate={{
           rotate: 360,
           borderColor: [
-            'rgba(20, 184, 166, 0.2)',
-            'rgba(20, 184, 166, 0.5)',
-            'rgba(20, 184, 166, 0.2)',
+            'rgba(59, 130, 246, 0.2)',
+            'rgba(59, 130, 246, 0.5)',
+            'rgba(59, 130, 246, 0.2)',
           ],
+          y: [0, -20, 0],
         }}
         transition={{
           rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
           borderColor: { duration: 3, repeat: Infinity },
+          y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
         }}
       />
       <motion.div
-        className="absolute top-1/3 right-16 w-16 h-16 border border-cyan-500/20 rounded-full"
+        className="absolute top-1/3 right-16 w-24 h-24 border-2 border-accent/30 rounded-full"
         animate={{
-          scale: [1, 1.2, 1],
+          scale: [1, 1.3, 1],
           rotate: -360,
+          y: [0, -15, 0],
         }}
         transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
       />
       <motion.div
-        className="absolute bottom-1/4 left-20 w-12 h-12 bg-primary/5 rounded-full"
+        className="absolute bottom-1/4 left-20 w-16 h-16 bg-primary/10 rounded-full backdrop-blur-sm"
         animate={{
-          y: [0, -30, 0],
-          x: [0, 15, 0],
+          y: [0, -40, 0],
+          x: [0, 20, 0],
+          scale: [1, 1.2, 1],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute bottom-1/3 right-24 w-24 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+        className="absolute bottom-1/3 right-32 w-32 h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent rounded-full"
         animate={{
-          scaleX: [0, 1, 0],
-          opacity: [0, 1, 0],
+          scaleX: [0.5, 1, 0.5],
+          opacity: [0.3, 0.8, 0.3],
+          x: [0, 30, 0],
         }}
-        transition={{ duration: 4, repeat: Infinity }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      {/* Deep parallax layer elements */}
+      <motion.div
+        className="absolute top-1/2 left-1/4 w-48 h-48 border border-primary/10 rounded-full"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]) }}
+        animate={{
+          scale: [1, 1.15, 1],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-64 h-1 bg-gradient-to-r from-primary/20 via-accent/30 to-primary/20"
+        style={{ x: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
+        animate={{
+          scaleX: [1, 1.5, 1],
+          opacity: [0.2, 0.5, 0.2],
+        }}
+        transition={{ duration: 6, repeat: Infinity }}
       />
     </section>
   );

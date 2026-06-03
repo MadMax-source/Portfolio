@@ -5,12 +5,12 @@ import TechStackSection from '@/components/tech-stack-section'
 import AboutSection from '@/components/about-section'
 import ContactSection from '@/components/contact-section'
 import Footer from '@/components/footer'
-import AnimatedBackground from '@/components/animated-background'
+import BubbleBackground from '@/components/bubble-background'
 
 export default function Home() {
   return (
     <main className="relative overflow-hidden">
-      <AnimatedBackground />
+      <BubbleBackground />
       <Navbar />
       <HeroSection />
       <ProjectsSection />
